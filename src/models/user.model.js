@@ -65,6 +65,7 @@ userSchema.method.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
+//This method is used to generate an access token for a user using JSON Web Tokens (JWT)
 userSchema.method.generateAccessToken = function () {
   return jwt.sign(
     {
@@ -79,6 +80,8 @@ userSchema.method.generateAccessToken = function () {
     }
   );
 };
+
+//This method is used to generate a refresh token for a user using JSON Web Tokens (JWT)
 userSchema.method.generateRefreshToken = function () {
   return jwt.sign(
     {
