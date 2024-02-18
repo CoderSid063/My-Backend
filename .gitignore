@@ -1,2 +1,15 @@
 node_modules
 .env
+
+
+// dependencies :[
+{
+  mongoose-aggregate-paginate-v2 : using for aggregation pipeline in mongoDb
+},
+{
+  bcrypt: using for password encryption/decrypt/compare etc.  bcz in Db we can not store password directly
+},
+{
+  jsonwebtoken : use for token , visit "jwttoken" website for more details
+}
+]
