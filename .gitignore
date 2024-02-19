@@ -11,5 +11,10 @@ node_modules
 },
 {
   jsonwebtoken : use for token , visit "jwttoken" website for more details
+},
+{
+  multer : it is used to upload a file, https://github.com/expressjs/multer#readme
+},
+{ cloudnary : it is a server provide service. we use it for upload our file in the cloudnary server
 }
 ]
