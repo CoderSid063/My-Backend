@@ -5,27 +5,28 @@ Ex :--  const asyncHandler = (fn) => () =>{}
         const asyncHandler = (fn) => {async()=>{}};
 */
 
-// This is a higher order function which return a promice. this is used in a production company.
+/**
+ * This is a higher order function which return a promice.
+ * can handle both synchronous and asynchronous request handlers
+ */
 
-/*
 const asyncHandler = (requestHandler) => {
   return (req, res, next) => {
     Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));
   };
 };
-*/
 
-// This is a higher order function using try catch block
+// This is a higher order function using try catch block and  It is specifically designed to work with asynchronous functions.
 
-const asyncHandler = (fn) => async (req, res, next) => {
+/*const asyncHandler = (fn) => async (req, res, next) => {
   try {
-    await fn(res, res, next);
+    await fn(req, res, next);
   } catch (error) {
-    res.status(err.code || 500).json({
+    res.status(error.code || 500).json({
       success: false,
-      message: err.messsage,
+      message: error.messsage,
     });
   }
 };
-
+*/
 export { asyncHandler };

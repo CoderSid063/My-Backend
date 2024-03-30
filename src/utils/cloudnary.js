@@ -1,5 +1,4 @@
 import { v2 as cloudinary } from "cloudinary";
-import { log } from "console";
 
 //i use fs for manage all my files, it is byDefault in NodeJs
 import fs from "fs";

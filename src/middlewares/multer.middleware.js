@@ -1,3 +1,4 @@
+//i am using multer here to save file locally then i upload it in cloudnary server.
 import multer from "multer";
 
 //multer storage used here is : diskStorage
@@ -14,7 +15,8 @@ export const upload = multer({
   storage,
 });
 
-//the original code of multer
+/*---------the original code of multer---------*/
+
 /*const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')

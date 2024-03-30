@@ -19,6 +19,11 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
     },
+    phoneNumber: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
     fullName: {
       type: String,
       required: true,
@@ -41,7 +46,7 @@ const userSchema = new Schema(
       required: [true, " Password Required"],
     },
     refreshToken: {
-      type: string,
+      type: String,
     },
   },
   { timestamps: true }
@@ -52,7 +57,7 @@ const userSchema = new Schema(
 // type of middleware is : "save"
 //i am not using arrow fnc bcz i cant not use "this." .
 userSchema.pre("save", async function (next) {
-  //checking if the password field changed then encrypt the pasword
+  //checking if the password field changed then encrypt the password
   if (!this.isModified("password")) return next();
 
   // hash is a method inside bcrypt use for encrypt
@@ -65,7 +70,7 @@ userSchema.method.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-//This method is used to generate an access token for a user using JSON Web Tokens (JWT)
+//This method is used to generate an access token for a user using "JSON Web Tokens "(JWT)
 userSchema.method.generateAccessToken = function () {
   return jwt.sign(
     {
@@ -73,6 +78,7 @@ userSchema.method.generateAccessToken = function () {
       email: this.email,
       username: this.username,
       fullName: this.fullName,
+      phoneNumber: this.phoneNumber,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
