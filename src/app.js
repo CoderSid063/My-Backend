@@ -27,6 +27,7 @@ import userRouter from "./routes/user.routes.js";
 
 //routes declaration
 app.use("/api/v1/users", userRouter);
+
 /**
  * i am not using "app.get" bcz i am importing routes not declearing in app.js file.
  *

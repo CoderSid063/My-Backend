@@ -16,13 +16,8 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      lowercase: true,
+      lowecase: true,
       trim: true,
-    },
-    phoneNumber: {
-      type: Number,
-      required: true,
-      unique: true,
     },
     fullName: {
       type: String,
@@ -31,25 +26,29 @@ const userSchema = new Schema(
       index: true,
     },
     avatar: {
-      type: String, // cloudnary url
+      type: String, // cloudinary url
       required: true,
     },
-    coverimage: {
-      type: String,
+    coverImage: {
+      type: String, // cloudinary url
     },
-    watchHistory: {
-      type: Schema.Types.ObjectId,
-      ref: "Videos",
-    },
+    watchHistory: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Video",
+      },
+    ],
     password: {
       type: String,
-      required: [true, " Password Required"],
+      required: [true, "Password is required"],
     },
     refreshToken: {
       type: String,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 //pre middleware hook
@@ -61,24 +60,24 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
   // hash is a method inside bcrypt use for encrypt
-  this.password = bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
 });
 
 // before exporrt "User" This method check if a given password matches the encrypted password stored in the database
 //compare returns true/false
-userSchema.method.isPasswordCorrect = async function (password) {
+userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
 //This method is used to generate an access token for a user using "JSON Web Tokens "(JWT)
-userSchema.method.generateAccessToken = function () {
+userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       _id: this._id,
       email: this.email,
       username: this.username,
       fullName: this.fullName,
-      phoneNumber: this.phoneNumber,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
@@ -88,7 +87,7 @@ userSchema.method.generateAccessToken = function () {
 };
 
 //This method is used to generate a refresh token for a user using JSON Web Tokens (JWT)
-userSchema.method.generateRefreshToken = function () {
+userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
       _id: this._id,
