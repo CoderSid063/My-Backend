@@ -5,7 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 // this method for generate access and refresh token
-const tokenHandler = async (userId) => {
+const tokenGenerater = async (userId) => {
   try {
     const user = await User.findById(userId);
     const accessToken = user.generateAccessToken();
@@ -144,10 +144,10 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   //token generate :-
-  const { accessToken, refreshToken } = await tokenHandler(user._id);
+  const { accessToken, refreshToken } = await tokenGenerater(user._id);
 
   // sending cookies to user :-
-  const loggedInUser = await User.findById(used._id).select(
+  const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
   console.log(loggedInUser);
@@ -175,6 +175,29 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 });
 
-const logoutUser = async((req, res) => {});
+const logoutUser = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        refreshToken: undefined,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  //options for cokkies:-
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "user logeed out"));
+});
 
 export { registerUser, loginUser, logoutUser };
