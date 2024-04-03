@@ -5,7 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 // this method for generate access and refresh token
-const tokenGenerater = async (userId) => {
+const tokenGenerator = async (userId) => {
   try {
     const user = await User.findById(userId);
     const accessToken = user.generateAccessToken();
@@ -57,25 +57,25 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
-  let coverImageLocalPath;
-  if (
-    req.files &&
-    Array.isArray(req.files.coverImage) &&
-    req.files.coverImage.length > 0
-  ) {
-    coverImageLocalPath = req.files.coverImage[0].path;
-  }
+  // let coverImageLocalPath;
+  // if (
+  //   req.files &&
+  //   Array.isArray(req.files.coverImage) &&
+  //   req.files.coverImage.length > 0
+  // ) {
+  //   coverImageLocalPath = req.files.coverImage[0].path;
+  // }
   //console.log(req.files);
 
   //check for image , check for avatar :-
   if (!avatarLocalPath) {
     throw new ApiError(400, "avatar required");
   }
-  // if (!coverImageLocalPath) {
-  //   throw new ApiError(400, "avatar required");
-  // }
+  if (!coverImageLocalPath) {
+    throw new ApiError(400, "avatar required");
+  }
 
   //upload the file in cloudnary :-
   const avatar = await uploadOnCloudinary(avatarLocalPath);
@@ -123,7 +123,7 @@ const loginUser = asyncHandler(async (req, res) => {
   console.log(req.body);
 
   //login with either username or email :-
-  if (!username || !email) {
+  if (!(username || email)) {
     throw new ApiError(400, "username or email required");
   }
 
@@ -144,7 +144,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   //token generate :-
-  const { accessToken, refreshToken } = await tokenGenerater(user._id);
+  const { accessToken, refreshToken } = await tokenGenerator(user._id);
 
   // sending cookies to user :-
   const loggedInUser = await User.findById(user._id).select(
@@ -170,7 +170,7 @@ const loginUser = asyncHandler(async (req, res) => {
           accessToken,
           refreshToken,
         },
-        "user loggedin successfully"
+        "user logged In successfully"
       )
     );
 });

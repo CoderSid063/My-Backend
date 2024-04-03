@@ -20,6 +20,12 @@ router.route("/register").post(
 router.route("/login").post(loginUser);
 
 //secure routes
+/**
+ * in logout i dont have user information.
+ * verifyJWT middleware get the token from the cookies, i prev. sended during login.
+ * then using that token verify the loginuser in DB.
+ * add that user information in "request"
+ */
 router.route("/logout").post(verifyJWT, logoutUser);
 
 export default router;
