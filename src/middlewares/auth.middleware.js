@@ -3,7 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 
-// This middlware verify the loginuser in my DB or not then add information object name:"user" in "request" like "req.objName".
+// This middlware verify the loginuser in my DB then add information object name:"user" in "request" like "req.objName".
 export const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
     //get token from cookies or authorization :-
@@ -28,7 +28,7 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
     }
     console.log(user, "user found in db");
 
-    //add user information in req
+    //add user information in requset
     req.user = user;
     next();
   } catch (error) {
